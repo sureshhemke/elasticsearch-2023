@@ -5,7 +5,7 @@ ip addr show
 sudo su
 
 # Change IP Address on below line
-seed_hosts=10.0.0.4
+seed_hosts=10.0.0.4   # Should be private ip of master node
 cat /etc/elasticsearch/elasticsearch.yml
 cat <<EOT >> /etc/elasticsearch/elasticsearch.yml
 cluster.name: cluster-1

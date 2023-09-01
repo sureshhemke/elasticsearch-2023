@@ -1,4 +1,4 @@
-# Install Elastic Search
+# Install ElasticSearch, Logstash and Kibana
 
 ```
 sudo apt update
@@ -28,26 +28,11 @@ sudo apt install kibana -y
 
 ```
 sudo systemctl enable kibana
-```
-
-```
 sudo systemctl start kibana
 ```
 
 ```
 sudo apt install logstash -y
-```
-
-```
-#sudo nano /etc/logstash/conf.d/02-beats-input.conf
-```
-
-```
-#sudo nano /etc/logstash/conf.d/30-elasticsearch-output.conf
-```
-
-```
-sudo -u logstash /usr/share/logstash/bin/logstash --path.settings /etc/logstash -t
 ```
 
 ```
