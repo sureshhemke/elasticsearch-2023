@@ -1,5 +1,6 @@
-# Cross-Cluster Replication
-- Data replication is the answer to a lot of potential problems in data engineering. In this hands-on lab, you will get to configure Elasticsearch clusters for cross-cluster replication.
+# Implementing Role-Based Access Control
+- Data replication is the answer to a lot of potential problems in data engineering
+
 ```
 GET _cat/indices?v
 ```
@@ -39,8 +40,8 @@ GET _cat/indices?v
 
 - Verify that the accounts-1 index now appears in the list of active indices in the response pane.
 
-## On the Follower Cluster, Configure the accounts Auto-Follow Pattern
-### Configure an auto-follow pattern with the name accounts, which follows any future indices that are created on the leader cluster (i.e., accounts-*):
+
+## Configure an auto-follow pattern with the name accounts, which follows any future indices that are created on the leader cluster (i.e., accounts-*):
 ```
 PUT _ccr/auto_follow/accounts
 {
@@ -48,5 +49,3 @@ PUT _ccr/auto_follow/accounts
   "leader_index_patterns": ["accounts-*"]
 }
 ```
-
-- An acknowledgment should display in the response pane, indicating it was configured successfully.
