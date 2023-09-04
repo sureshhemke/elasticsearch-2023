@@ -16,7 +16,7 @@ GET /orders/_search
 }
 ```
 
-## Including `20` terms instead of the default `10`
+## Including `3` terms instead of the default `10`
 
 ```
 GET /orders/_search
@@ -26,49 +26,14 @@ GET /orders/_search
     "status_terms": {
       "terms": {
         "field": "status",
-        "size": 20
+        "size": 3
       }
     }
   }
 }
 ```
 
-## Aggregating documents with missing field (or `NULL`)
 
-```
-GET /orders/_search
-{
-  "size": 0,
-  "aggs": {
-    "status_terms": {
-      "terms": {
-        "field": "status",
-        "size": 20,
-        "missing": "N/A"
-      }
-    }
-  }
-}
-```
-
-## Changing the minimum document count for a bucket to be created
-
-```
-GET /orders/_search
-{
-  "size": 0,
-  "aggs": {
-    "status_terms": {
-      "terms": {
-        "field": "status",
-        "size": 20,
-        "missing": "N/A",
-        "min_doc_count": 0
-      }
-    }
-  }
-}
-```
 
 ## Ordering the buckets
 
@@ -81,8 +46,6 @@ GET /orders/_search
       "terms": {
         "field": "status",
         "size": 20,
-        "missing": "N/A",
-        "min_doc_count": 0,
         "order": {
           "_key": "asc"
         }
