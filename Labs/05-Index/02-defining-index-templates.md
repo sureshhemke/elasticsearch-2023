@@ -10,7 +10,7 @@ GET _cat/indices?v
 
 
 ```
-PUT _index_templates/earthquakes
+PUT _index_template/earthquakes
 {
  "index_patterns": ["earthquakes-*"],
  "template":  {
@@ -23,7 +23,7 @@ PUT _index_templates/earthquakes
 ```
 
 ```
-GET _index_templates/earthquakes
+GET _index_template/earthquakes
 ```
 
 
@@ -40,7 +40,7 @@ DELETE earthquakes-1
 ```
 
 ```
-DELETE _index_templates/earthquakes
+DELETE _index_template/earthquakes
 ```
 
 ```
@@ -61,7 +61,7 @@ GET _component_template/shards
 ```
 
 ```
-PUT _index_templates/earthquakes
+PUT _index_template/earthquakes
 {
  "index_patterns": ["earthquakes-*"],
  "composed_of": ["shards"]
@@ -70,7 +70,7 @@ PUT _index_templates/earthquakes
 
 
 ```
-GET _index_templates/earthquakes
+GET _index_template/earthquakes
 ```
 
 
