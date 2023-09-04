@@ -1,0 +1,35 @@
+vm-es000.eastus2.cloudapp.azure.com
+ssh esuser@vm-es000.eastus2.cloudapp.azure.com
+Satish	Rakhonde
+
+vm-es001.eastus2.cloudapp.azure.com
+ssh esuser@vm-es001.eastus2.cloudapp.azure.com
+Paul	Atemnkeng
+
+vm-es002.eastus2.cloudapp.azure.com
+ssh esuser@vm-es002.eastus2.cloudapp.azure.com
+Sandeep	Patil
+
+vm-es003.eastus2.cloudapp.azure.com
+ssh esuser@vm-es003.eastus2.cloudapp.azure.com
+Chetan	Kumar
+
+vm-es004.eastus2.cloudapp.azure.com
+ssh esuser@vm-es004.eastus2.cloudapp.azure.com
+Sureshkumar	Morum
+
+vm-es005.eastus2.cloudapp.azure.com
+ssh esuser@vm-es005.eastus2.cloudapp.azure.com
+Jaynesh	Prabhu
+
+vm-es006.eastus2.cloudapp.azure.com
+ssh esuser@vm-es006.eastus2.cloudapp.azure.com
+Suresh	Hemke
+
+vm-es009.eastus2.cloudapp.azure.com
+ssh esuser@vm-es009.eastus2.cloudapp.azure.com
+Shrinivasa	Rao
+
+vm-es010.eastus2.cloudapp.azure.com
+ssh esuser@vm-es010.eastus2.cloudapp.azure.com
+Badari	Vaskuri
