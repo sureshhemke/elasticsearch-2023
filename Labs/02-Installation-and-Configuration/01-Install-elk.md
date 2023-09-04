@@ -21,6 +21,12 @@ sudo apt update
 sudo apt install elasticsearch -y
 ```
 
+```
+sudo systemctl start elasticsearch
+sudo systemctl enable elasticsearch
+```
+
+
 
 ```
 sudo apt install kibana -y
