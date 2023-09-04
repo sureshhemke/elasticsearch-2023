@@ -1,90 +1,85 @@
-# Defining Custom Analyzers, Multi-Fields, and Mappings
-- Elasticsearch has a plethora of built-in analyzers, as well as the ability to automatically detect the data type for each of your fields
-- If you want to fine-tune how your fields are analyzed and mapped, then Elasticsearch has you covered. 
-
-## Create the strings_as_keywords Component Template
+## Analyzing a string with the `standard` analyzer
 ```
-GET _cat/indices?v
-```
-
-### Create the strings_as_keywords component template with the following parameters:
-- Dynamically maps string fields as the keyword datatype.
-- Only indexes the first 256 characters.
-
-```
-PUT _component_template/strings_as_keywords
+POST /_analyze
 {
-  "template": {
-    "mappings": {
-      "dynamic_templates": [
-        {
-          "strings_as_keywords": {
-            "match_mapping_type": "string",
-            "mapping": {
-              "type": "keyword",
-              "ignore_above": 256
-            }
-          }
-        }
-      ]
-    }
-  }
+  "text": "2 guys walk into   a bar, but the third... DUCKS! :-)",
+  "analyzer": "standard"
 }
 ```
 
-
+## Building the equivalent of the `standard` analyzer
 ```
-GET _component_template/strings_as_keywords
-```
-
-- The strings_as_keywords component template should display in the response pane.
-
-## Create the social_media_analyzer Component Template
-### Create the social_media_analyzer component template with the following parameters:
-- Creates a custom analyzer called social_media that uses the classic tokenizer.
-- Uses the lowercase filter and a custom english_stop filter that removes English stop words.
-- Uses a custom emoticons mapping character filter with the following mappings:
-```
-:) as happy
-:D as laughing
-:( as sad
-:') as crying
-:O as surprised
-;) as winking
-```
-
-```
-PUT _component_template/social_media_analyzer
+POST /_analyze
 {
-  "template": {
-    "settings": {
-      "analysis": {
-        "analyzer": {
-          "social_media": {
-            "type": "custom",
-            "tokenizer": "classic",
-            "char_filter": [ "emoticons" ],
-            "filter": [ "lowercase", "english_stop" ]
-          }
-        },
-        "char_filter": {
-          "emoticons": {
-            "type": "mapping",
-            "mappings": [
-              ":) => happy",
-              ":D => laughing",
-              ":( => sad",
-              ":'( => crying",
-              ":O => surprised",
-              ";) => winking"
-            ]
-          }
-        },
-        "filter": {
-          "english_stop": {
-            "type": "stop",
-            "stopwords": "_english_"
-          }
+  "text": "2 guys walk into   a bar, but the third... DUCKS! :-)",
+  "char_filter": [],
+  "tokenizer": "standard",
+  "filter": ["lowercase"]
+}
+```
+
+## Testing the `keyword` analyzer
+```
+POST /_analyze
+{
+  "text": "2 guys walk into   a bar, but the third... DUCKS! :-)",
+  "analyzer": "keyword"
+}
+```
+
+## Understanding type coercion
+
+### Supplying a floating point
+```
+PUT /coercion_test/_doc/1
+{
+  "price": 7.4
+}
+```
+
+### Supplying a floating point within a string
+```
+PUT /coercion_test/_doc/2
+{
+  "price": "7.4"
+}
+```
+
+### Supplying an invalid value
+```
+PUT /coercion_test/_doc/3
+{
+  "price": "7.4m"
+}
+```
+
+### Retrieve document
+```
+GET /coercion_test/_doc/2
+```
+
+### Clean up
+```
+DELETE /coercion_test
+```
+
+
+## Adding explicit mappings
+
+### Add field mappings for `reviews` index
+```
+PUT /reviews
+{
+  "mappings": {
+    "properties": {
+      "rating": { "type": "float" },
+      "content": { "type": "text" },
+      "product_id": { "type": "integer" },
+      "author": {
+        "properties": {
+          "first_name": { "type": "text" },
+          "last_name": { "type": "text" },
+          "email": { "type": "keyword" }
         }
       }
     }
@@ -92,49 +87,78 @@ PUT _component_template/social_media_analyzer
 }
 ```
 
+### Index a test document
 ```
-GET _component_template/social_media_analyzer
-```
-
-## Create the twitter_template Index Template
-### Create the twitter_template index template with the following parameters:
-- Matches all indices that start with "twitter-".
-- Composed of the strings_as_keywords and social_media_analyzercomponent templates.
-- Maps the tweet field as an analyzed string field with the social_media analyzer.
-- Maps a tweet.keyword multi-field as type keyword and only indexes the first 280 characters.
-- Sets the number of shards to 1 and replicas to 0.
-
-```
-PUT _index_template/twitter_template
+PUT /reviews/_doc/1
 {
-  "index_patterns": ["twitter-*"],
-  "composed_of": ["social_media_analyzer", "strings_as_keywords"],
-  "template": {
-    "mappings": {
-      "properties": {
-        "tweet": {
-          "type": "text",
-          "analyzer": "social_media",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 280
-            }
-          }
-        }
-      }
-    },
-    "settings": {
-      "number_of_shards": 1,
-      "number_of_replicas": 0
+  "rating": 5.0,
+  "content": "Outstanding course! Bo really taught me a lot about Elasticsearch!",
+  "product_id": 123,
+  "author": {
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "johndoe123@example.com"
+  }
+}
+```
+
+## Retrieving mappings
+
+### Retrieving mappings for the `reviews` index
+```
+GET /reviews/_mapping
+```
+
+### Retrieving mapping for the `content` field
+```
+GET /reviews/_mapping/field/content
+```
+
+### Retrieving mapping for the `author.email` field
+```
+GET /reviews/_mapping/field/author.email
+```
+
+## Using dot notation in field names
+
+### Using dot notation for the `author` object
+```
+PUT /reviews_dot_notation
+{
+  "mappings": {
+    "properties": {
+      "rating": { "type": "float" },
+      "content": { "type": "text" },
+      "product_id": { "type": "integer" },
+      "author.first_name": { "type": "text" },
+      "author.last_name": { "type": "text" },
+      "author.email": { "type": "keyword" }
     }
   }
 }
 ```
 
+### Retrieve mapping
 ```
-GET _index_template/twitter_template
+GET /reviews_dot_notation/_mapping
 ```
 
+## Adding mappings to existing indices
 
-- The twitter_template index template should display in the response pane.
+### Add new field mapping to existing index
+```
+PUT /reviews/_mapping
+{
+  "properties": {
+    "created_at": {
+      "type": "date"
+    }
+  }
+}
+```
+
+### Retrieve the mapping
+```
+GET /reviews/_mapping
+```
+

@@ -1,63 +1,112 @@
-# Searching with Term-Level Queries
-- Elasticsearch offers a variety of different search functions that can be used to perform term-level, non-analyzed searching.
+# Searching for terms
 
-## Craft a Query That Answers the Question: Who Was the Customer That Placed Order ID 725676?
-```
-GET _cat/indices?v
-```
+## Basic usage
 
 ```
-GET ecommerce/_search
+GET /products/_search
 {
   "query": {
     "term": {
-      "order_id": {
-        "value": "725676"
+      "tags.keyword": "Vegetable"
+    }
+  }
+}
+```
+
+## Explicit syntax
+
+A more explicit syntax than the above. Use this if you need to add parameters to the query.
+
+```
+GET /products/_search
+{
+  "query": {
+    "term": {
+      "tags.keyword": {
+        "value": "Vegetable"
       }
     }
   }
 }
 ```
 
-## Craft a Query That Answers the Question: From What Cities Did Samir Garza, Selena Gibbs, and Tariq Duncan Place Orders?
+## Case insensitive search
 
 ```
-GET _cat/indices?v
+GET /products/_search
+{
+  "query": {
+    "term": {
+      "tags.keyword": {
+        "value": "Vegetable",
+        "case_insensitive": true
+      }
+    }
+  }
+}
 ```
 
-### From what cities did Samir Garza, Selena Gibbs, and Tariq Duncan place orders?
+## Searching for multiple terms
+
 ```
-GET ecommerce/_search
+GET /products/_search
 {
   "query": {
     "terms": {
-      "customer_full_name.keyword": [
-        "Samir Garza",
-        "Selena Gibbs",
-        "Tariq Duncan"
-      ]
+      "tags.keyword": ["Soup", "Meat"]
     }
   }
 }
 ```
 
-## Craft a Query That Answers the Question: What Orders Were Placed with a Total Taxed Price of 10 to 20 Euro?
-```
-GET _cat/indices?v
-```
+## Searching for booleans
 
-### What orders were placed with a total taxed price of 10 to 20 euro?
 ```
-GET ecommerce/_search
+GET /products/_search
 {
   "query": {
-    "range": {
-      "taxful_total_price": {
-        "gte": 10,
-        "lte": 20
-      }
+    "term": {
+      "is_active": true
     }
   }
 }
 ```
 
+## Searching for numbers
+
+```
+GET /products/_search
+{
+  "query": {
+    "term": {
+      "in_stock": 1
+    }
+  }
+}
+```
+
+## Searching for dates
+
+```
+GET /products/_search
+{
+  "query": {
+    "term": {
+      "created": "2007/10/14"
+    }
+  }
+}
+```
+
+## Retrieving documents by IDs
+
+```
+GET /products/_search
+{
+  "query": {
+    "ids": {
+      "values": ["100", "200", "300"]
+    }
+  }
+}
+```

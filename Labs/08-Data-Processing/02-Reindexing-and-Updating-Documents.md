@@ -1,100 +1,185 @@
-# Reindexing and Updating Documents
-- If you’ve already indexed a bunch of data into Elasticsearch and changed your mind on how you want it stored
+# Reindexing documents with the Reindex API
 
+## Add new index with new mapping
 ```
-GET _cat/indices?v
-```
-
-## Run a search for "King Lear" in Shakespeare:
-```
-GET shakespeare/_search
+PUT /reviews_new
 {
-  "query": {
-    "term": {
-      "play_name.keyword": {
-        "value": "King Lear"
+  "mappings" : {
+    "properties" : {
+      "author" : {
+        "properties" : {
+          "email" : {
+            "type" : "keyword",
+            "ignore_above" : 256
+          },
+          "first_name" : {
+            "type" : "text"
+          },
+          "last_name" : {
+            "type" : "text"
+          }
+        }
+      },
+      "content" : {
+        "type" : "text"
+      },
+      "created_at" : {
+        "type" : "date"
+      },
+      "product_id" : {
+        "type" : "keyword"
+      },
+      "rating" : {
+        "type" : "float"
       }
     }
   }
 }
 ```
 
-
-## Run a search for the misspelled "King Leer" in Shakespeare:
+## Retrieve mapping
 ```
-GET shakespeare/_search
-{
-  "query": {
-    "term": {
-      "play_name.keyword": {
-        "value": "King Leer"
-      }
-    }
-  }
-}
+GET /reviews/_mappings
 ```
 
-
-## Post to Shakespeare using the update by query API to replace all instances of "King Leer" with "King Lear":
+## Reindex documents into `reviews_new`
 ```
-POST shakespeare/_update_by_query
-{
-  "script": {
-    "source": "ctx._source.play_name = 'King Lear'"
-  },
-  "query": {
-    "term": {
-      "play_name.keyword": {
-        "value": "King Leer"
-      }
-    }
-  }
-}
-```
-
-## Run the search for "King Leer" to verify that zero results are returned.
-```
-GET shakespeare/_search
-{
-  "query": {
-    "term": {
-      "play_name.keyword": {
-        "value": "King Leer"
-      }
-    }
-  }
-}
-```
-
-## Copy the Shakespeare Index from the es1 Node to the Shakespeare Node
-- Navigate to the public IP address of the shakespeare node by copy-pasting the Public IP address of shakespeare provided in the Credentials into a new web browser window or tab.
-
-### Log in as the elastic user with the password elastic_acg.
-
-### View the indices for this node:
-```
-GET _cat/indices?v
-```
-
-### Migrate the data over using a POST _reindex:
-```
-POST _reindex
+POST /_reindex
 {
   "source": {
-    "remote": {
-      "host": "http://10.0.1.101:9200",
-      "username": "elastic",
-      "password": "elastic_acg"
-    },
-    "index": "shakespeare"
+    "index": "reviews"
   },
   "dest": {
-    "index": "shakespeare"
+    "index": "reviews_new"
   }
 }
 ```
 
-### View the indices for this node again:
+## Delete all documents
 ```
-GET _cat/indices?v
+POST /reviews_new/_delete_by_query
+{
+  "query": {
+    "match_all": {}
+  }
+}
+```
+
+## Convert `product_id` values to strings
+```
+POST /_reindex
+{
+  "source": {
+    "index": "reviews"
+  },
+  "dest": {
+    "index": "reviews_new"
+  },
+  "script": {
+    "source": """
+      if (ctx._source.product_id != null) {
+        ctx._source.product_id = ctx._source.product_id.toString();
+      }
+    """
+  }
+}
+```
+
+## Retrieve documents
+```
+GET /reviews_new/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+```
+
+## Reindex specific documents
+```
+POST /_reindex
+{
+  "source": {
+    "index": "reviews",
+    "query": {
+      "match_all": { }
+    }
+  },
+  "dest": {
+    "index": "reviews_new"
+  }
+}
+```
+
+## Reindex only positive reviews
+```
+POST /_reindex
+{
+  "source": {
+    "index": "reviews",
+    "query": {
+      "range": {
+        "rating": {
+          "gte": 4.0
+        }
+      }
+    }
+  },
+  "dest": {
+    "index": "reviews_new"
+  }
+}
+```
+
+## Removing fields (source filtering)
+```
+POST /_reindex
+{
+  "source": {
+    "index": "reviews",
+    "_source": ["content", "created_at", "rating"]
+  },
+  "dest": {
+    "index": "reviews_new"
+  }
+}
+```
+
+## Changing a field's name
+```
+POST /_reindex
+{
+  "source": {
+    "index": "reviews"
+  },
+  "dest": {
+    "index": "reviews_new"
+  },
+  "script": {
+    "source": """
+      # Rename "content" field to "comment"
+      ctx._source.comment = ctx._source.remove("content");
+    """
+  }
+}
+```
+
+## Ignore reviews with ratings below 4.0
+```
+POST /_reindex
+{
+  "source": {
+    "index": "reviews"
+  },
+  "dest": {
+    "index": "reviews_new"
+  },
+  "script": {
+    "source": """
+      if (ctx._source.rating < 4.0) {
+        ctx.op = "noop"; # Can also be set to "delete"
+      }
+    """
+  }
+}
 ```

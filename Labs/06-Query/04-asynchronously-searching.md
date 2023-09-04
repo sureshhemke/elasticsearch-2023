@@ -8,13 +8,11 @@ GET _cat/indices?v
 
 
 ```
-POST /filebeat-7.13.4/_async_search?wait_for_completion_timeout=0
+POST /recipes/_async_search?wait_for_completion_timeout=0
 {
   "size": 100,
   "query": {
-    "match": {
-      "message": "ssh"
-    }
+  "match_all": { }
   }
 }
 ```
@@ -25,7 +23,7 @@ POST /filebeat-7.13.4/_async_search?wait_for_completion_timeout=0
 
 ### Use the async search ID to get the status of the request:
 ```
-GET _async_search/status/<ASYNC_SEARCH_ID>
+GET _async_search/status/FmVUZlJKOHZyU2Z1QzFsUXd1UW9qMFEcTGZuNU5CVUxUZUtabWdicEVraFg5Zzo0NTAwMg==
 ```
 
 ```
@@ -38,7 +36,7 @@ GET _cat/indices?v
 ## Get the Results of the Asynchronous Search
 ### Use the async search ID to get the results of the request:
 ```
-GET _async_search/<ASYNC_SEARCH_ID>
+GET _async_search/FmVUZlJKOHZyU2Z1QzFsUXd1UW9qMFEcTGZuNU5CVUxUZUtabWdicEVraFg5Zzo0NTAwMg==
 ```
 
 
@@ -47,11 +45,11 @@ GET _async_search/<ASYNC_SEARCH_ID>
 ### Delete the Asynchronous Search
 #### Use the async search ID to delete the request:
 ```
-DELETE _async_search/<ASYNC_SEARCH_ID>
+DELETE _async_search/FmVUZlJKOHZyU2Z1QzFsUXd1UW9qMFEcTGZuNU5CVUxUZUtabWdicEVraFg5Zzo0NTAwMg==
 ```
 
 ```
-GET _async_search/status/<ASYNC_SEARCH_ID>
+GET _async_search/status/FmVUZlJKOHZyU2Z1QzFsUXd1UW9qMFEcTGZuNU5CVUxUZUtabWdicEVraFg5Zzo0NTAwMg==
 ```
 
 ###Confirm the request was deleted. You should see error

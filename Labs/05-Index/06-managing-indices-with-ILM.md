@@ -21,7 +21,6 @@ PUT _ilm/policy/audit_policy
     "cold": {
      "min_age": "7d",
      "actions": {
-       "freeze": {},
        "readonly": {}
      }
    },
