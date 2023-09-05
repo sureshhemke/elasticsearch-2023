@@ -1,8 +1,12 @@
 # Configure and create a cluster
 
 ## On Each node
+```
 ip addr show
 sudo su
+sudo apt install iputils-ping
+ping <ip-address-of-other-vms>
+```
 
 # Change IP Address on below line
 ```
