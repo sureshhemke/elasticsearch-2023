@@ -55,6 +55,16 @@ sudo cat /etc/elasticsearch/jvm.options | grep Xms3g
 sudo cat /etc/elasticsearch/jvm.options | grep Xmx3g
 ```
 
+## Start the elasticsearch process on Master node
+- Note: We need to make sure that we first start ElasticSearch on master node
+```
+sudo systemctl enable elasticsearch
+sudo systemctl stop elasticsearch
+sudo systemctl start elasticsearch
+curl -X GET "localhost:9200"
+```
+
+
 ## On Data Node:
 ```
 sudo su
