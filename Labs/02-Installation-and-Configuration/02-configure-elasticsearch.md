@@ -120,7 +120,7 @@ curl -X GET "localhost:9200"
 
 ### Check the startup process:
 ```
-sudo less /var/log/elasticsearch/cluster-1.log
+sudo tail -f /var/log/elasticsearch/cluster-1.log
 ```
 
 
