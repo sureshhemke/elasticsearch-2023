@@ -1,6 +1,6 @@
 # CAT APIs
 
-
+```
 #The verbose output gives a nice display of results of a cat command. In the example given below, we get the details of various indices present in the cluster.
 GET _cat
 GET _cat/indices?v
@@ -25,3 +25,4 @@ GET /_cat/count?v
 GET _cat/master?help
 
 
+```
