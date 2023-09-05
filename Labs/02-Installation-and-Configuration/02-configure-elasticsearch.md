@@ -8,7 +8,7 @@ sudo apt install iputils-ping
 ping <ip-address-of-other-vms>
 ```
 
-# Change IP Address on below line
+## On each node, change IP Address on below line 
 ```
 seed_hosts=10.0.0.4   # Should be private ip of master node
 ```
