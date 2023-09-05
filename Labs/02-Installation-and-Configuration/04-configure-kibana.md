@@ -21,6 +21,7 @@ cat /etc/kibana/kibana.yml
 
 ```
 systemctl stop kibana
+systemctl enable kibana
 systemctl start kibana
 ```
 
