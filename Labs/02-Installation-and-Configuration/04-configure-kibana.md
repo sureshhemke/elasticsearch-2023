@@ -11,7 +11,7 @@ master_ip="10.0.0.6"
 
 ```
 cat <<EOT >> /etc/kibana/kibana.yml
-server.host: "$master_ip"
+server.host: "0.0.0.0"
 EOT
 ```
 
