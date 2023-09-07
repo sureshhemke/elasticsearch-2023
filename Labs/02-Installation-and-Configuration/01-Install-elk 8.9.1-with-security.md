@@ -78,24 +78,17 @@ sudo apt update
 ```
 
 
-```
-curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-```
-
-```
-echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
-```
-
-```
-sudo apt update
-```
-
-## Install Elasticsearch
+## Install Elasticsearch 8.9
 ```
 wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.9.1-amd64.deb
 wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.9.1-amd64.deb.sha512
 shasum -a 512 -c elasticsearch-8.9.1-amd64.deb.sha512 
 sudo dpkg -i elasticsearch-8.9.1-amd64.deb
+```
+
+## Make sure that you are switched to root user before running below commands
+```
+sudo su
 ```
 
 ```
@@ -107,12 +100,6 @@ EOT
 ```
 
 ```
-sudo sed -i 's/xpack.security.enabled: true/xpack.security.enabled: false/' /etc/elasticsearch/elasticsearch.yml
-sudo sed -i 's/xpack.security.enrollment.enabled: true/xpack.security.enrollment.enabled: false/' /etc/elasticsearch/elasticsearch.yml
-```
-
-
-```
 cat /etc/elasticsearch/elasticsearch.yml
 ```
 
@@ -121,19 +108,26 @@ sudo systemctl stop elasticsearch
 sudo systemctl start elasticsearch
 sudo systemctl status elasticsearch
 sudo systemctl enable elasticsearch
+sudo tail -n 200 -f /var/log/elasticsearch/elasticsearch.log
 ```
+
+## Generate password
+```
+/usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic
+```
+
+### Change password on below command
+```
+curl -XGET --cacert /etc/elasticsearch/certs/http_ca.crt -u elastic:E*15DX=*l31b1MCEDUma 'https://localhost:9200?pretty=true'
+```
+
 
 ## Troubleshooting Elasticsearch
 ```
-curl -X GET 'http://localhost:9200'
-curl -X GET 'http://localhost:9200/_nodes?pretty'
-curl -XPOST -H "Content-Type: application/json" 'http://localhost:9200/cyberithub/_doc/1' -d '{ "message": "Hello World!" }'
-curl -XGET -H "Content-Type: application/json" 'http://localhost:9200/cyberithub/_doc/1'
 sudo journalctl -xeu elasticsearch.service
 sudo journalctl -fu elasticsearch.service
 sudo tail -n 200 -f /var/log/elasticsearch/elasticsearch.log
 ```
-
 
 ## Install Kibana
 ```
@@ -152,6 +146,13 @@ EOT
 cat /etc/kibana/kibana.yml
 ```
 
+```
+/usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s kibana
+```
+
+```
+/usr/share/kibana/bin/kibana-setup --enrollment-token eyJ2ZXIiOiI4LjkuMSIsImFkciI6WyIxMC4wLjAuMTA6OTIwMCJdLCJmZ3IiOiIyNjU1ZGRjNThmNDc2MGI1OTM1N2FmYWFjMjkxM2ExMDdiMTJiOWIzMGViMDNhNmU0M2MzNTQzNjI0MzM5MjE0Iiwia2V5IjoieTBlM2Jvb0Jic21odXpLblZuUnk6WDVLMl9tdGVSdEtEUFpIVlVFS1NsZyJ9
+```
 
 ```
 sudo systemctl stop kibana
@@ -168,36 +169,4 @@ curl localhost:5601
 sudo journalctl -xeu kibana.service
 sudo journalctl -fu kibana.service
 sudo tail -f /var/log/kibana/kibana.log
-```
-
-
-## Install Logstash (Optional)
-```
-wget https://artifacts.elastic.co/downloads/logstash/logstash-8.9.1-amd64.deb
-shasum -a 512 logstash-8.9.1-amd64.deb
-sudo dpkg -i logstash-8.9.1-amd64.deb
-```
-
-## Run Logstash
-```
-bin/logstash -f logstash.conf
-```
-
-```
-sudo systemctl start logstash
-sudo systemctl enable logstash
-```
-
-## Troubleshooting
-```
-curl -X GET 'http://localhost:9200'
-curl -X GET 'http://localhost:9200/_nodes?pretty'
-curl -XPOST -H "Content-Type: application/json" 'http://localhost:9200/cyberithub/_doc/1' -d '{ "message": "Hello World!" }'
-curl -XGET -H "Content-Type: application/json" 'http://localhost:9200/cyberithub/_doc/1'
-sudo journalctl -xeu elasticsearch.service
-sudo journalctl -xeu kibana.service
-sudo journalctl -fu elasticsearch.service
-sudo journalctl -fu kibana.service
-sudo tail -n 200 -f /var/log/kibana/kibana.log
-sudo tail -n 200 -f /var/log/elasticsearch/elasticsearch.log
 ```
