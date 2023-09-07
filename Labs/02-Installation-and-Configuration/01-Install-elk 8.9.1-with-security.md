@@ -91,6 +91,7 @@ sudo dpkg -i elasticsearch-8.9.1-amd64.deb
 sudo su
 ```
 
+## Configure elasticsearch
 ```
 cat <<EOT >> /etc/elasticsearch/elasticsearch.yml
 network.host: [_local_, _site_]
@@ -103,6 +104,7 @@ EOT
 cat /etc/elasticsearch/elasticsearch.yml
 ```
 
+## Start elasticsearch
 ```
 sudo systemctl stop elasticsearch
 sudo systemctl start elasticsearch
@@ -112,10 +114,12 @@ sudo tail -n 200 -f /var/log/elasticsearch/elasticsearch.log
 ```
 
 ## Generate password
+- Since Elasticsearch is installed as security enabled, we need to connect to it using username/ password.
 ```
 /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic
 ```
 
+## Test the connectivity to ELasticsearch
 ### Change password on below command
 ```
 curl -XGET --cacert /etc/elasticsearch/certs/http_ca.crt -u elastic:E*15DX=*l31b1MCEDUma 'https://localhost:9200?pretty=true'
@@ -136,6 +140,7 @@ shasum -a 512 kibana-8.9.1-amd64.deb
 sudo dpkg -i kibana-8.9.1-amd64.deb
 ```
 
+## Configure Kibana
 ```
 cat <<EOT >> /etc/kibana/kibana.yml
 server.host: "0.0.0.0"
@@ -146,14 +151,19 @@ EOT
 cat /etc/kibana/kibana.yml
 ```
 
+## To enrole/connect Kibana to Elasticsearch, we need to create a token in the Elasticsearch
 ```
 /usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s kibana
 ```
 
+## On the Kibana system, use the token to connect to Elasticsearch.
+- Note: replace the token below
 ```
 /usr/share/kibana/bin/kibana-setup --enrollment-token eyJ2ZXIiOiI4LjkuMSIsImFkciI6WyIxMC4wLjAuMTA6OTIwMCJdLCJmZ3IiOiIyNjU1ZGRjNThmNDc2MGI1OTM1N2FmYWFjMjkxM2ExMDdiMTJiOWIzMGViMDNhNmU0M2MzNTQzNjI0MzM5MjE0Iiwia2V5IjoieTBlM2Jvb0Jic21odXpLblZuUnk6WDVLMl9tdGVSdEtEUFpIVlVFS1NsZyJ9
 ```
 
+
+## Start Kibana
 ```
 sudo systemctl stop kibana
 sudo systemctl status kibana
