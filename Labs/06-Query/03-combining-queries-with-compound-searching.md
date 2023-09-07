@@ -21,6 +21,8 @@ GET /products/_search
 }
 ```
 
+## The above query is same as we run below query in other RDBMS systems.
+- Note: Below query is just for comparision and it will not work in Elasticsearch
 **SQL:** `SELECT * FROM products  WHERE tags IN ("Alcohol")`
 
 ## `must_not`
@@ -51,6 +53,8 @@ GET /products/_search
 }
 ```
 
+## The above query is same as we run below query in other RDBMS systems.
+- Note: Below query is just for comparision and it will not work in Elasticsearch
 **SQL:** `SELECT * FROM products WHERE tags IN ("Alcohol") AND tags NOT IN ("Wine")`
 
 ## `should`
@@ -157,7 +161,7 @@ GET /products/_search
 }
 ```
 
-Since a `must` query clause is specified, all of the `should` query clauses are optional. 
+- Since a `must` query clause is specified, all of the `should` query clauses are optional. 
 They are therefore only used to boost the relevance scores of matching documents.
 
 ```
@@ -189,7 +193,7 @@ GET /products/_search
 }
 ```
 
-This behavior can be configured with the `minimum_should_match` parameter as follows.
+-This behavior can be configured with the `minimum_should_match` parameter as follows.
 
 ```
 GET /products/_search
