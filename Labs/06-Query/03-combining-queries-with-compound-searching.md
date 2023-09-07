@@ -23,7 +23,8 @@ GET /products/_search
 
 ## The above query is same as we run below query in other RDBMS systems.
 - Note: Below query is just for comparision and it will not work in Elasticsearch
-**SQL:** `SELECT * FROM products  WHERE tags IN ("Alcohol")`
+
+  - **SQL:** `SELECT * FROM products  WHERE tags IN ("Alcohol")`
 
 ## `must_not`
 
@@ -55,7 +56,7 @@ GET /products/_search
 
 ## The above query is same as we run below query in other RDBMS systems.
 - Note: Below query is just for comparision and it will not work in Elasticsearch
-**SQL:** `SELECT * FROM products WHERE tags IN ("Alcohol") AND tags NOT IN ("Wine")`
+  - **SQL:** `SELECT * FROM products WHERE tags IN ("Alcohol") AND tags NOT IN ("Wine")`
 
 ## `should`
 
