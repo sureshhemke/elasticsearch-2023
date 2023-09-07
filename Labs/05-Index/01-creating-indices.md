@@ -1,4 +1,6 @@
 # Creating Indices in Elasticsearch
+
+
 ## Introduction
 - Before you can ingest any data into Elasticsearch, you first need to construct indices for a particular dataset
 
@@ -63,4 +65,6 @@ PUT sales_b2c-000001
 ```
 GET _cat/indices?v
 ```
+
+### Please import the data from data folder which is there in this repository.
 
