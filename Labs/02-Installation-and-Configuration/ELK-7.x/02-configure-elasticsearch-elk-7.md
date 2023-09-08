@@ -1,4 +1,6 @@
 # Configure and create a cluster
+## Important Node:
+ - Please make sure that the master node should be up and running before we start the data nodes
 
 ## On Each node
 ```
@@ -63,6 +65,17 @@ sudo systemctl stop elasticsearch
 sudo systemctl start elasticsearch
 curl -X GET "localhost:9200"
 ```
+
+### Check the node configuration:
+```
+curl localhost:9200/_cat/nodes?v
+```
+
+
+## Important Node:
+ - Please make sure that the master node should be up and running before we start the data nodes
+ - Run below commands only when the master node is setup correctly
+
 
 
 ## On Data Node:
