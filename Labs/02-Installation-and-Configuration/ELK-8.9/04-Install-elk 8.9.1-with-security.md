@@ -151,7 +151,7 @@ EOT
 cat /etc/kibana/kibana.yml
 ```
 
-## To enrole/connect Kibana to Elasticsearch, we need to create a token in the Elasticsearch
+## To enroll/connect Kibana to Elasticsearch, we need to create a token in the Elasticsearch
 ```
 /usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s kibana
 ```
