@@ -2,7 +2,7 @@
 ## Important Node:
  - Please make sure that the master node should be up and running before we start the data nodes
 
-## On Each node
+## On Each node. To test connectivity.
 ```
 ip addr show
 sudo su
@@ -10,11 +10,11 @@ sudo apt install iputils-ping
 ping <ip-address-of-other-vms>
 ```
 
-## On each node, change IP Address on below line 
+## On each node, change IP Address on below line. Below command will set the variable. 
 ```
 seed_hosts=10.0.0.4   # Should be private ip of master node
 ```
-
+## On all nodes
 ```
 cat /etc/elasticsearch/elasticsearch.yml
 cat <<EOT >> /etc/elasticsearch/elasticsearch.yml
@@ -47,7 +47,7 @@ EOT
 ```
 cat /etc/elasticsearch/elasticsearch.yml
 ```
-
+## Configure JAVA memory for elasticsearch
 ```
 sudo cat /etc/elasticsearch/jvm.options | grep Xms4g
 sudo cat /etc/elasticsearch/jvm.options | grep Xmx4g
@@ -78,7 +78,7 @@ curl localhost:9200/_cat/nodes?v
 
 
 
-## On Data Node:
+## Configure data node. Run On Data Node:
 ```
 sudo su
 ```
