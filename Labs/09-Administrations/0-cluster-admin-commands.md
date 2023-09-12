@@ -30,7 +30,26 @@ GET _cluster/stats
 ```
 GET /_cluster/stats/nodes/node_name_1,master:false
 ```
+## Move shard from one node to another.
 
+#Check the status first.
+GET /_cat/shards/products?v
+
+```
+POST /_cluster/reroute
+{
+  "commands": [
+    {
+      "move": {
+        "index": "products",
+        "shard": 0,
+        "from_node": "data-7",
+        "to_node": "data-4"
+      }
+    }
+  ]
+}
+```
 
 ```
 POST /_cluster/reroute
